@@ -37,15 +37,26 @@ var attemptMove = function(row1, col1, row2, col2){
   // White capture.
   else if ( currentPlayer === 'wht' && (row2 - row1 === 2) && (col2 - col1 === -2 || col2 - col1 === 2) && ( board[row2-1][col2-1] === 'red' || board[row1+1][col1-1] === 'red' ) ) {
     makeMove(row1, col1, row2, col2)
-    // board[row1+1][col1-1] === 'red' ? board[row1+1][col1-1] = ' X ' : board[row2-1][col2-1] = ' X '
-    board[row2-1][col2-1] === 'red' ? board[row2-1][col2-1] = ' X ' : board[row1+1][col1-1] = ' X '
+    col2 - col1 < 0 ? board[row1+1][col1-1] = ' X ' : board[row2-1][col2-1] = ' X '
     turns++
     currentPlayer = 'red'
     displayBoard();
 
-    console.log('White caputes red piece!')
+    console.log('White captures red piece!')
     console.log('Turn ', turns)
-    currentPlayer === 'wht' ? console.log("It is White's turn to move!") : console.log("It is Red's turn to move!")
+    console.log("It is Red's turn to move!")
+  }
+  // Red capture.
+  else if ( currentPlayer === 'red'  && (row2 - row1 === -2) && (col2 - col1 === -2 || col2 - col1 === 2) && ( board[row2+1][col2-1] === 'wht' || board[row1-1][col1-1] === 'wht' )){
+    makeMove(row1, col1, row2, col2)
+    col2 - col1 < 0 ? board[row1-1][col1-1] = ' X ' : board[row2+1][col2-1] = ' X '
+    turns++
+    currentPlayer = 'wht'
+    displayBoard();
+
+    console.log('Red captures white piece!')
+    console.log('Turn ', turns)
+    console.log("It is White's turn to move!")
   }
   // Move forward one row only.
   else if ( (currentPlayer === 'wht' && (row2 - row1 !== 1)) || (currentPlayer === 'red' && (row2 - row1 !== -1)) ){
