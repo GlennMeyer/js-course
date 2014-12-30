@@ -1,6 +1,6 @@
-var board, currentPlayer;
-var turns = 1;
-var errors = 0;
+var board, currentPlayer, turns, errors, whiteCaptures, redCaptures;
+var games = 0;
+var playing = false;
 
 var resetBoard = function () {
   board = [
@@ -15,15 +15,19 @@ var resetBoard = function () {
   ];
 
   currentPlayer = 'wht'
+  turns = 1
+  errors = 0
+  whiteCaptures = 0
+  redCaptures = 0
 };
 
 var attemptMove = function(row1, col1, row2, col2){
   row1 = charToNum[row1.slice(8)]
-  col1 = col1.slice(8)
+  if (col1.indexOf('empty') === -1){col1 = col1.slice(8, 9)}
   row2 = charToNum[row2.slice(8)]
-  col2 = col2.slice(8)
+  if (col2.indexOf('empty') === -1){col2 = col2.slice(8, 9)}
 
-  console.log('startRow: ', row1, 'startCol: ', col1, 'endRow: ', row2, 'endCol: ', col2)
+  console.log('startRow:', row1, 'startCol:', col1, 'endRow:', row2, 'endCol:', col2)
   // Confirm appropriate starting piece.
   if (board[row1][col1] !== currentPlayer) {
     errors++
@@ -39,11 +43,12 @@ var attemptMove = function(row1, col1, row2, col2){
     makeMove(row1, col1, row2, col2)
     col2 - col1 < 0 ? board[row1+1][col1-1] = ' X ' : board[row2-1][col2-1] = ' X '
     turns++
+    whiteCaptures++
     currentPlayer = 'red'
     displayBoard();
 
-    console.log('White captures red piece!')
-    console.log('Turn ', turns)
+    console.log('White captures red piece! Captures', whiteCaptures)
+    console.log('Turn', turns)
     console.log("It is Red's turn to move!")
   }
   // Red capture.
@@ -51,11 +56,12 @@ var attemptMove = function(row1, col1, row2, col2){
     makeMove(row1, col1, row2, col2)
     col2 - col1 < 0 ? board[row1-1][col1-1] = ' X ' : board[row2+1][col2-1] = ' X '
     turns++
+    redCaptures++
     currentPlayer = 'wht'
     displayBoard();
 
-    console.log('Red captures white piece!')
-    console.log('Turn ', turns)
+    console.log('Red captures white piece! Captures', redCaptures)
+    console.log('Turn', turns)
     console.log("It is White's turn to move!")
   }
   // Move forward one row only.
@@ -81,16 +87,17 @@ var attemptMove = function(row1, col1, row2, col2){
   // Temp error.
   else{
     errors++
-    console.log('error!  Error number ', errors);
+    console.log('error!  Error number', errors);
     $(document).trigger('invalidMove')
 
   }
 };
 
 var getMove = function(){
+  playing = true
   var moves = {}
 
-  console.log('Turn ', turns)
+  console.log('Turn', turns)
   currentPlayer === 'wht' ? console.log("It is White's turn to move!") : console.log("It is Red's turn to move!")
 
   $(document).ready(function (){
@@ -99,8 +106,11 @@ var getMove = function(){
     $('span').click(function(event) {
       event.preventDefault();
       selection.push(this.className)
-      console.log('selection length: ', selection.length)
+      // console.log('selection length:', selection.length)
 
+      // if (selection.length > 1 && board[selection[1].slice(8)][selection[0].slice(8)] !== currentPlayer){
+      //   currentPlayer === 'wht' ? console.log('Please select white piece.') : console.log('Please select red piece.')
+      // }
       if (selection.length > 3){
         moves = {
           startRow: selection[1],
@@ -108,7 +118,7 @@ var getMove = function(){
           endRow: selection[3],
           endCol: selection[2]
         }
-        console.log(moves)
+        // console.log(moves)
         selection = []
         event.stopPropagation();
         attemptMove(moves.startRow, moves.startCol, moves.endRow, moves.endCol)
@@ -125,15 +135,21 @@ var makeMove = function(row1, col1, row2, col2){
 };
 
 var play = function(){
-  resetBoard();
-  $(document).ready( function(){
-    displayBoard();
+  resetBoard();  
+  displayBoard();
+  if (playing === false){
     getMove();
-  })
+  }
 }
 
 var removePiece = function(row, col){
   $(document).trigger('pieceTaken', currentPlayer, enemy, row, col)
 };
 
-play();
+$(document).ready(function() {
+  $('.start').click(function(event){
+    play();
+    games++
+    event.stopPropagation();
+  })
+})

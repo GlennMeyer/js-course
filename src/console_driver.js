@@ -19,11 +19,13 @@ var displayBoard = function () {
     for (var j = 0; j < board.length; j++){
       if (board[i][j] === 'wht'){
         $('.row-' + numToChar[i]).find('.col-' + j).text('')
-        $('.row-' + numToChar[i]).find('.col-' + j).append("<img src='white_piece.jpg' style='height: 50px; width: 50px;'/>")
+        var $div1 = $("<div>", {class: "white piece"})
+        $('.row-' + numToChar[i]).find('.col-' + j).append($div1)//.append("<img src='white_piece.jpg' style='height: 50px; width: 50px;'/>")
       }
       else if (board[i][j] === 'red'){
         $('.row-' + numToChar[i]).find('.col-' + j).text('')
-        $('.row-' + numToChar[i]).find('.col-' + j).append("<img src='red_piece.jpg' style='height: 50px; width: 50px;'/>")
+        var $div2 = $("<div>", {class: "red piece"})
+        $('.row-' + numToChar[i]).find('.col-' + j).append($div2)//.append("<img src='red_piece.jpg' style='height: 50px; width: 50px;'/>")
       }
       else {
         $('.row-' + numToChar[i]).find('.col-' + j).text('')
