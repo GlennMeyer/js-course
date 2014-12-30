@@ -18,13 +18,47 @@ var resetBoard = function () {
 };
 
 var attemptMove = function(row1, col1, row2, col2){
-  console.log('startRow: ', charToNum[row1], 'startCol: ', col1, 'endRow: ', charToNum[row2], 'endCol: ', col2)
-  if (col1.indexOf('empty') > -1 || col2.indexOf('empty') > -1){
+  row1 = charToNum[row1.slice(8)]
+  col1 = col1.slice(8)
+  row2 = charToNum[row2.slice(8)]
+  col2 = col2.slice(8)
+
+  console.log('startRow: ', row1, 'startCol: ', col1, 'endRow: ', row2, 'endCol: ', col2)
+  // Confirm appropriate starting piece.
+  if (board[row1][col1] !== currentPlayer) {
+    errors++
+    currentPlayer === 'wht' ? console.log('Please select white piece. Error number', errors) : console.log('Please select red piece. Error number', errors)
+  }
+  // Square is black.
+  else if (col1.indexOf('empty') > -1 || col2.indexOf('empty') > -1){
     errors++
     console.log('Cannot select red space!  Error number', errors)
   }
-  else if(board[charToNum[row1.slice(8)]][col1.slice(8)] === currentPlayer && board[charToNum[row2.slice(8)]][col2.slice(8)] === ' X '){
-    makeMove(charToNum[row1.slice(8)], col1.slice(8), charToNum[row2.slice(8)], col2.slice(8));
+  // White left capture.
+  else if (currentPlayer === 'wht' && (row2 - row1 === 2) && (col2 - col1 === -2 || col2 - col1 === 2) && board[row1+1][col1-1] === 'red') {
+    makeMove(row1, col1, row2, col2)
+    board[row1+1][col1-1] = ' X '
+    turns++
+    currentPlayer === 'wht' ? currentPlayer = 'red' : currentPlayer = 'wht'
+    displayBoard();
+
+    console.log('White caputes red piece!')
+    console.log('Turn ', turns)
+    currentPlayer === 'wht' ? console.log("It is White's turn to move!") : console.log("It is Red's turn to move!")
+  }
+  // Move forward one row only.
+  else if ( (currentPlayer === 'wht' && (row2 - row1 !== 1)) || (currentPlayer === 'red' && (row2 - row1 !== -1)) ){
+    errors++
+    console.log('Can only move one row foward!  Error number', errors)
+  }
+  // Move left or right one column.
+  else if ( (col2 - col1 > 1) || (col2 - col1 < -1) ){
+    errors++
+    console.log('Can only move one column left or right!  Error number', errors)
+  }
+  // Valid move, non-capture.
+  else if (board[row1][col1] === currentPlayer && board[row2][col2] === ' X '){
+    makeMove(row1, col1, row2, col2)
     turns++
     currentPlayer === 'wht' ? currentPlayer = 'red' : currentPlayer = 'wht'
     displayBoard();
@@ -32,6 +66,7 @@ var attemptMove = function(row1, col1, row2, col2){
     console.log('Turn ', turns)
     currentPlayer === 'wht' ? console.log("It is White's turn to move!") : console.log("It is Red's turn to move!")
   }
+  // Temp error.
   else{
     errors++
     console.log('error!  Error number ', errors);
