@@ -34,12 +34,13 @@ var attemptMove = function(row1, col1, row2, col2){
     errors++
     console.log('Cannot select red space!  Error number', errors)
   }
-  // White left capture.
-  else if (currentPlayer === 'wht' && (row2 - row1 === 2) && (col2 - col1 === -2 || col2 - col1 === 2) && board[row1+1][col1-1] === 'red') {
+  // White capture.
+  else if ( currentPlayer === 'wht' && (row2 - row1 === 2) && (col2 - col1 === -2 || col2 - col1 === 2) && ( board[row2-1][col2-1] === 'red' || board[row1+1][col1-1] === 'red' ) ) {
     makeMove(row1, col1, row2, col2)
-    board[row1+1][col1-1] = ' X '
+    // board[row1+1][col1-1] === 'red' ? board[row1+1][col1-1] = ' X ' : board[row2-1][col2-1] = ' X '
+    board[row2-1][col2-1] === 'red' ? board[row2-1][col2-1] = ' X ' : board[row1+1][col1-1] = ' X '
     turns++
-    currentPlayer === 'wht' ? currentPlayer = 'red' : currentPlayer = 'wht'
+    currentPlayer = 'red'
     displayBoard();
 
     console.log('White caputes red piece!')
