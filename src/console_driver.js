@@ -16,5 +16,18 @@ var displayBoard = function () {
   console.log("-----------------------------------");
   for (var i = 0; i < board.length; i++) {
     console.log(numToChar[i] + " |" + board[i].join(" "));
+    for (var j = 0; j < board.length; j++){
+      if (board[i][j] === 'wht'){
+        $('.row-' + numToChar[i]).find('.col-' + j).text('')
+        $('.row-' + numToChar[i]).find('.col-' + j).append("<img src='white_piece.jpg' style='height: 50px; width: 50px;'/>")
+      }
+      else if (board[i][j] === 'red'){
+        $('.row-' + numToChar[i]).find('.col-' + j).text('')
+        $('.row-' + numToChar[i]).find('.col-' + j).append("<img src='red_piece.jpg' style='height: 50px; width: 50px;'/>")
+      }
+      else {
+        $('.row-' + numToChar[i]).find('.col-' + j).text('')
+      }
+    }
   }
 };

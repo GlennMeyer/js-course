@@ -1,4 +1,6 @@
 var board, currentPlayer;
+var turns = 1;
+var errors = 0;
 
 var resetBoard = function () {
   board = [
@@ -16,38 +18,56 @@ var resetBoard = function () {
 };
 
 var attemptMove = function(row1, col1, row2, col2){
-  if (board[row1][col2] === currentPlayer && board[row2][col2] === ' X '){
-    makeMove();
+  console.log('startRow: ', charToNum[row1], 'startCol: ', col1, 'endRow: ', charToNum[row2], 'endCol: ', col2)
+  if (col1.indexOf('empty') > -1 || col2.indexOf('empty') > -1){
+    errors++
+    console.log('Cannot select red space!  Error number', errors)
   }
-  else {
-    alert('error!');
+  else if(board[charToNum[row1.slice(8)]][col1.slice(8)] === currentPlayer && board[charToNum[row2.slice(8)]][col2.slice(8)] === ' X '){
+    makeMove(charToNum[row1.slice(8)], col1.slice(8), charToNum[row2.slice(8)], col2.slice(8));
+    turns++
+    currentPlayer === 'wht' ? currentPlayer = 'red' : currentPlayer = 'wht'
+    displayBoard();
+
+    console.log('Turn ', turns)
+    currentPlayer === 'wht' ? console.log("It is White's turn to move!") : console.log("It is Red's turn to move!")
+  }
+  else{
+    errors++
+    console.log('error!  Error number ', errors);
     $(document).trigger('invalidMove')
+
   }
 };
 
 var getMove = function(){
-  alert(currentPlayer + "'s turn to move!")
   var moves = {}
 
+  console.log('Turn ', turns)
+  currentPlayer === 'wht' ? console.log("It is White's turn to move!") : console.log("It is Red's turn to move!")
+
   $(document).ready(function (){
-    var selection = []
+    var selection = [];
+
     $('span').click(function(event) {
       event.preventDefault();
       selection.push(this.className)
-      console.log(selection.length)
+      console.log('selection length: ', selection.length)
 
-      if (selection.length === 4){
+      if (selection.length > 3){
         moves = {
-        startRow: selection[1].slice(8),
-        startCol: selection[0].slice(8, 9),
-        endRow: selection[3].slice(8),
-        endCol: selection[2].slice(8, 9)
+          startRow: selection[1],
+          startCol: selection[0],
+          endRow: selection[3],
+          endCol: selection[2]
         }
         console.log(moves)
-        return moves
+        selection = []
+        event.stopPropagation();
+        attemptMove(moves.startRow, moves.startCol, moves.endRow, moves.endCol)
       }
     })
-  }) 
+  })
 };
 
 var makeMove = function(row1, col1, row2, col2){
@@ -57,6 +77,16 @@ var makeMove = function(row1, col1, row2, col2){
   $(document).trigger('boardChange', board)
 };
 
+var play = function(){
+  resetBoard();
+  $(document).ready( function(){
+    displayBoard();
+    getMove();
+  })
+}
+
 var removePiece = function(row, col){
   $(document).trigger('pieceTaken', currentPlayer, enemy, row, col)
 };
+
+play();
