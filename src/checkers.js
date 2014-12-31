@@ -1,5 +1,5 @@
 var board, currentPlayer, turns, errors, whiteCaptures, redCaptures;
-var games = 0;
+var games = 1;
 var playing = false;
 
 var resetBoard = function () {
