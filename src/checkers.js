@@ -31,12 +31,14 @@ var attemptMove = function(row1, col1, row2, col2){
   // Confirm appropriate starting piece.
   if (board[row1][col1] !== currentPlayer) {
     errors++
-    currentPlayer === 'wht' ? console.log('Please select white piece. Error number', errors) : console.log('Please select red piece. Error number', errors)
+    $('.console').text('')
+    currentPlayer === 'wht' ? $('.console').append('Please select white piece.  Error number: ', errors) : $('.console').append('Please select red piece.  Error number: ', errors)
   }
   // Square is black.
   else if (col1.indexOf('empty') > -1 || col2.indexOf('empty') > -1){
     errors++
-    console.log('Cannot select red space!  Error number', errors)
+    $('.console').text('')
+    $('.console').append('Cannot select red space!  Error number: ', errors)
   }
   // White capture.
   else if ( currentPlayer === 'wht' && (row2 - row1 === 2) && (col2 - col1 === -2 || col2 - col1 === 2) && ( board[row2-1][col2-1] === 'red' || board[row1+1][col1-1] === 'red' ) ) {
@@ -47,9 +49,8 @@ var attemptMove = function(row1, col1, row2, col2){
     currentPlayer = 'red'
     displayBoard();
 
-    console.log('White captures red piece! Captures', whiteCaptures)
-    console.log('Turn', turns)
-    console.log("It is Red's turn to move!")
+    $('.console').text('')
+    $('.console').append('White captures red piece!  Capture: ', whiteCaptures, "<br>It is Red's turn to move!  Turn: ", turns)
   }
   // Red capture.
   else if ( currentPlayer === 'red'  && (row2 - row1 === -2) && (col2 - col1 === -2 || col2 - col1 === 2) && ( board[row2+1][col2-1] === 'wht' || board[row1-1][col1-1] === 'wht' )){
@@ -60,19 +61,20 @@ var attemptMove = function(row1, col1, row2, col2){
     currentPlayer = 'wht'
     displayBoard();
 
-    console.log('Red captures white piece! Captures', redCaptures)
-    console.log('Turn', turns)
-    console.log("It is White's turn to move!")
+    $('.console').text('')
+    $('.console').append('Red captures white piece!  Capture: ', redCaptures, "<br>It is White's turn to move!  Turn: ", turns)
   }
   // Move forward one row only.
   else if ( (currentPlayer === 'wht' && (row2 - row1 !== 1)) || (currentPlayer === 'red' && (row2 - row1 !== -1)) ){
     errors++
-    console.log('Can only move one row foward!  Error number', errors)
+    $('.console').text('')
+    $('.console').append('Can only move one row foward!  Error number: ', errors)
   }
   // Move left or right one column.
   else if ( (col2 - col1 > 1) || (col2 - col1 < -1) ){
     errors++
-    console.log('Can only move one column left or right!  Error number', errors)
+    $('.console').text('')
+    $('.console').append('Can only move one column left or right!  Error number: ', errors)
   }
   // Valid move, non-capture.
   else if (board[row1][col1] === currentPlayer && board[row2][col2] === ' X '){
@@ -81,8 +83,8 @@ var attemptMove = function(row1, col1, row2, col2){
     currentPlayer === 'wht' ? currentPlayer = 'red' : currentPlayer = 'wht'
     displayBoard();
 
-    console.log('Turn ', turns)
-    currentPlayer === 'wht' ? console.log("It is White's turn to move!") : console.log("It is Red's turn to move!")
+    $('.console').text('')
+    $('.console').append('Turn: ', turns, (currentPlayer === 'wht' ? ".  It is White's turn to move!" : ".  It is Red's turn to move!"))
   }
   // Temp error.
   else{
@@ -135,6 +137,7 @@ var makeMove = function(row1, col1, row2, col2){
 };
 
 var play = function(){
+  $('.console').text("It is White's turn to move!")
   resetBoard();  
   displayBoard();
   if (playing === false){

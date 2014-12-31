@@ -32,4 +32,10 @@ var displayBoard = function () {
       }
     }
   }
+  $('.games').text(games)
+  $('.current-player').text(currentPlayer === 'wht' ? 'White' : 'Red')
+  $('.turns').text(turns)
+  $('.errors').text(errors)
+  $('.white-captures').text(whiteCaptures)
+  $('.red-captures').text(redCaptures)
 };
