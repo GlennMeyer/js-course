@@ -10,6 +10,14 @@
   margin-bottom: 5px;
 }
 
+.checkers {
+  font-size: 34px;
+  color: white;
+  list-style-type: none;
+  font-weight: bold;
+  margin-left: 35px;
+}
+
 .col {
   display: inline-block;
   background-color: black;
@@ -57,6 +65,8 @@
 }
 .table-right {
   text-align: right;
+  background-color: white;
+  width: 40px;
 }
 
 .white {
